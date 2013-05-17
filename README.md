@@ -1,4 +1,9 @@
 wan
 ===
 
-Man page-like interface for Wikipedia
+Wikipedia for people who like man pages.
+
+Dependencies
+------------
+
+Lynx web browser

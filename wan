@@ -1,0 +1,50 @@
+#!/bin/bash
+# Copyright (c) 2011-2013 Jeff Gordon
+# All rights reserved
+
+##############################################################################
+# This program is intended to be the `man` equivalent of Wikipedia, allowing
+#  you to quickly search articles through the command line.
+##############################################################################
+# Requires the text-based web browser `lynx` to run.
+#   - Home page:  http://lynx.isc.org/
+#   - Ubuntu:     sudo apt-get install lynx
+##############################################################################
+
+WIKI_SEARCH_URL="http://en.wikipedia.org/w/index.php?title=Special%3ASearch&search="
+LYNX_PATH="`which lynx`"
+SEARCH_STRING=""
+
+function usage() {
+    EXIT_CODE=2
+    if [ "$1" != "" ]; then EXIT_CODE=$1; fi
+    echo -e "Usage: $0 [OPTIONS] <KEYWORD>"
+    echo -e "OPTIONS:"
+    echo -e "\t--help\t\tDisplay help"
+    exit $EXIT_CODE
+}
+
+# Check for `lynx` support
+if [ "$LYNX_PATH" == "" ]; then
+    echo "The program 'lynx' is not installed on this system."
+    exit 1
+fi
+
+# Process arguments
+for i in $@; do
+    if [ "$i" == "--help" ]; then
+        usage 0
+    elif [ "$SEARCH_STRING" == "" ]; then
+        SEARCH_STRING="$i"
+    else
+        SEARCH_STRING="${SEARCH_STRING}+$i"
+    fi
+done
+
+# Check that they supplied search keywords
+if [ "$SEARCH_STRING" == "" ]; then
+    usage
+fi
+
+# Invoke `lynx` program to start browsing
+lynx ${WIKI_SEARCH_URL}${SEARCH_STRING}
